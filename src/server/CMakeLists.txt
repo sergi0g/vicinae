@@ -283,10 +283,6 @@ set(SRCS
 	src/extensions/vicinae/refresh-apps-command.cpp
 	src/extensions/power-management/power-management-extension.cpp
 
-	src/qml/browse-apps-model.hpp
-	src/qml/browse-apps-model.cpp
-	src/qml/browse-apps-view-host.hpp
-	src/qml/browse-apps-view-host.cpp
 	src/qml/browser-tabs-model.hpp
 	src/qml/browser-tabs-model.cpp
 	src/qml/browser-tabs-view-host.hpp
@@ -299,10 +295,6 @@ set(SRCS
 	src/qml/manage-fallback-model.cpp
 	src/qml/manage-fallback-view-host.hpp
 	src/qml/manage-fallback-view-host.cpp
-	src/qml/system-run-model.hpp
-	src/qml/system-run-model.cpp
-	src/qml/system-run-view-host.hpp
-	src/qml/system-run-view-host.cpp
 	src/qml/create-extension-success-view-host.hpp
 	src/qml/create-extension-success-view-host.cpp
 	src/qml/script-executor-view-host.hpp
@@ -425,9 +417,6 @@ set(SRCS
 	src/services/window-manager/abstract-window-manager.hpp
 	src/services/paste/abstract-paste-service.hpp
 	src/services/browser-extension-service.hpp
-
-	src/lib/program-db/program-db.hpp
-	src/lib/program-db/program-db.cpp
 
 	src/services/power-manager/systemd/systemd-power-manager.cpp
 
