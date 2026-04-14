@@ -32,9 +32,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libssl-dev \
+            libxml2-dev \
+            libminizip-dev \
+            libwayland-dev \
+            libwayland-bin \
+            wayland-protocols \
+            libqalculate-dev \
+            qt6-base-dev \
+            qt6-base-private-dev \
+            libqt6svg6-dev \
+            qt6-declarative-dev
+
       - name: Configure CMake
         run: |
-          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=$Qt6_DIR -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }}
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTS=ON \
+            -DCMAKE_C_COMPILER=${{ matrix.compiler.cc }} \
+            -DCMAKE_CXX_COMPILER=${{ matrix.compiler.cxx }} \
+            -DUSE_SYSTEM_KF6=OFF \
+            -DUSE_SYSTEM_QT_KEYCHAIN=OFF \
+            -DUSE_SYSTEM_LAYER_SHELL=OFF \
+            -DUSE_SYSTEM_CMARK_GFM=OFF
 
       - name: Build
         run: cmake --build build --parallel $(nproc)
