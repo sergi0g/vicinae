@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build-binary:
-    runs-on: [self-hosted, Linux, X64, prod]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     outputs:
@@ -90,42 +90,6 @@ jobs:
           cd "${INSTALL_DIR}"
           tar -czvf "${{ github.workspace }}/${{ steps.meta.outputs.artifact }}" .
 
-      - name: Fetch sponsors
-        id: sponsors
-        env:
-          GH_TOKEN: ${{ secrets.SPONSORS_TOKEN || github.token }}
-        run: |
-          set -euo pipefail
-          logins=$(gh api graphql -f query='
-            query {
-              organization(login: "vicinaehq") {
-                sponsors(first: 100) {
-                  nodes {
-                    ... on User { login }
-                    ... on Organization { login }
-                  }
-                }
-              }
-            }
-          ' --jq '.data.organization.sponsors.nodes[].login' 2>/dev/null || true)
-
-          if [[ -z "$logins" ]]; then
-            echo "body=" >> "$GITHUB_OUTPUT"
-          else
-            {
-              echo 'body<<SPONSORS_EOF'
-              echo ""
-              echo "## Sponsors"
-              echo ""
-              echo "Thanks to our sponsors for supporting vicinae!"
-              echo ""
-              while IFS= read -r login; do
-                echo "- [@${login}](https://github.com/${login})"
-              done <<< "$logins"
-              echo 'SPONSORS_EOF'
-            } >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Create GitHub Release and upload asset
         uses: softprops/action-gh-release@v2
         with:
@@ -136,17 +100,14 @@ jobs:
             ${{ steps.meta.outputs.artifact }}
 
       - name: Append sponsors to release notes
-        if: steps.sponsors.outputs.body != ''
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
           append_body: true
-          body: ${{ steps.sponsors.outputs.body }}
-
 
   build-appimage:
     needs: build-binary
-    runs-on: [self-hosted, Linux, X64, appimage]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     env:
