@@ -60,6 +60,22 @@ jobs:
       - name: Prepare dirs
         run: mkdir -p build install
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libssl-dev \
+            libxml2-dev \
+            libminizip-dev \
+            libwayland-dev \
+            libwayland-bin \
+            wayland-protocols \
+            libqalculate-dev \
+            qt6-base-dev \
+            qt6-base-private-dev \
+            libqt6svg6-dev \
+            qt6-declarative-dev
+
       - name: Configure CMake
         run: |
           cd build
@@ -70,7 +86,9 @@ jobs:
             -DVICINAE_PROVENANCE=binary_release \
             -DLTO=ON \
             -DUSE_SYSTEM_CMARK_GFM=OFF \
-            -DCMAKE_PREFIX_PATH="$Qt6_DIR" \
+            -DUSE_SYSTEM_KF6=OFF \
+            -DUSE_SYSTEM_QT_KEYCHAIN=OFF \
+            -DUSE_SYSTEM_LAYER_SHELL=OFF \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
 
       - name: Build
@@ -125,6 +143,22 @@ jobs:
       - name: Prepare dirs
         run: mkdir -p build install
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libssl-dev \
+            libxml2-dev \
+            libminizip-dev \
+            libwayland-dev \
+            libwayland-bin \
+            wayland-protocols \
+            libqalculate-dev \
+            qt6-base-dev \
+            qt6-base-private-dev \
+            libqt6svg6-dev \
+            qt6-declarative-dev
+
       - name: Configure CMake
         run: |
           cd build
@@ -133,6 +167,10 @@ jobs:
             -DCMAKE_POLICY_VERSION_MINIMUM=3.5        \
             -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"   \
             -DVICINAE_PROVENANCE=appimage             \
+            -DUSE_SYSTEM_CMARK_GFM=OFF                \
+            -DUSE_SYSTEM_KF6=OFF                      \
+            -DUSE_SYSTEM_QT_KEYCHAIN=OFF              \
+            -DUSE_SYSTEM_LAYER_SHELL=OFF              \
             -DLTO=ON
 
       - name: Build
