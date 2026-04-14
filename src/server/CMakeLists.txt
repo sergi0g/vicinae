@@ -834,7 +834,11 @@ install(TARGETS ${TARGET}
 
 if (BUILD_TESTS)
 	set(TEST_TARGET ${TARGET}-tests)
-	find_package(Catch2 3 REQUIRED)
+	find_package(Catch2 3 QUIET)
+	if (NOT Catch2_FOUND)
+		include(${CMAKE_SOURCE_DIR}/cmake/Catch2.cmake)
+		import_catch2()
+	endif()
 	add_executable(${TEST_TARGET}
 		tests/shortcut-tests.cpp
 		src/extend/action-shortcut-parser.cpp
