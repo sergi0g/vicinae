@@ -13,13 +13,29 @@ concurrency:
 
 jobs:
   build:
-    runs-on: [self-hosted, Linux, X64, appimage]
+    runs-on: ubuntu-latest
     env:
       INSTALL_DIR: ${{ github.workspace }}/install
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libssl-dev \
+            libxml2-dev \
+            libminizip-dev \
+            libwayland-dev \
+            libwayland-bin \
+            wayland-protocols \
+            libqalculate-dev \
+            qt6-base-dev \
+            qt6-base-private-dev \
+            libqt6svg6-dev \
+            qt6-declarative-dev
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -31,10 +47,14 @@ jobs:
         run: |
           cmake -S . -B build -G Ninja              \
           -DCMAKE_BUILD_TYPE=Release                \
+          -DUSE_SYSTEM_CMARK_GFM=OFF                \
+          -DUSE_SYSTEM_KF6=OFF                      \
+          -DUSE_SYSTEM_QT_KEYCHAIN=OFF              \
+          -DUSE_SYSTEM_LAYER_SHELL=OFF              \
           -DCMAKE_INSTALL_PREFIX="${INSTALL_DIR}"
 
       - name: Build
-        run: cmake --build build --parallel ${nproc}
+        run: cmake --build build --parallel $(nproc)
 
       - name: Install
         run: cmake --install build
